@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="net.telecomnancy.projetamio.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="arrêté"
+        android:id="@+id/textViewTV2"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/textView5"
+        android:layout_toLeftOf="@+id/textView5"
+        android:layout_toStartOf="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView5"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="77dp"
+        android:layout_marginEnd="77dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Service status :"
+        android:id="@+id/textViewTV1"
+        android:layout_gravity="right|center"
+        android:layout_alignTop="@+id/textViewTV2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Last result :"
+        android:id="@+id/textViewTV3"
+        android:layout_marginTop="59dp"
+        android:layout_below="@+id/textViewTV1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="N/A"
+        android:id="@+id/textViewTV4"
+        android:layout_alignBottom="@+id/textViewTV3"
+        android:layout_alignRight="@+id/textViewTV2"
+        android:layout_alignEnd="@+id/textViewTV2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Last alert :"
+        android:id="@+id/textViewTV5"
+        android:layout_below="@+id/textViewTV3"
+        android:layout_alignLeft="@+id/textViewTV3"
+        android:layout_alignStart="@+id/textViewTV3"
+        android:layout_marginTop="61dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="N/A"
+        android:id="@+id/textViewTV6"
+        android:layout_alignTop="@+id/textViewTV5"
+        android:layout_alignLeft="@+id/textViewTV4"
+        android:layout_alignStart="@+id/textViewTV4" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/toggleButtonOnOff"
+        android:checked="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="118dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start at boot"
+        android:id="@+id/checkBoxStart"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/toggleButtonOnOff"
+        android:layout_toStartOf="@+id/toggleButtonOnOff"
+        android:layout_marginBottom="59dp" />
+
+</RelativeLayout>
