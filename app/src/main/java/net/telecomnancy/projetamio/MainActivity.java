@@ -2,6 +2,7 @@ package net.telecomnancy.projetamio;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,14 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
+    // sharedPreferencies
 
+    public final String CBONSTARTSTATE_KEY="key_CBOnStartState";
+    public final String PREFERENCES_KEY="key_PREFERENCES";
+    public SharedPreferences sharedPreferences;
+
+
+    // My Service
     Intent i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +58,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        // répération des préferences de l'application
+        sharedPreferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         // récupération de la checkbox StartAtBoot
         CheckBox b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
+
+        // prise en compte des preferences de l'application
+        b_StartAtBoot.setChecked(sharedPreferences.getBoolean(CBONSTARTSTATE_KEY,false));
+
         b_StartAtBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean state=false;
                 if(isChecked) {
-                    Log.d("MainActivity","Le service MainService est lancé au démarrage");
+                    state = true;
+                    Log.d("MainActivity","L'application est lancé au démarrage du smartphone");
                 } else {
-                    Log.d("MainActivity","Le service MainService est arrêté au démarrage");
+                    state = false;
+                    Log.d("MainActivity","L'application n'est pas lancé au démarrage du smartphone");
                 }
+                // enregistrement de la modification dans les préferences
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putBoolean(CBONSTARTSTATE_KEY,state);
+                editor.commit();
             }
         });
     }
