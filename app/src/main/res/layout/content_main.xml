@@ -92,9 +92,9 @@
         android:text="New ToggleButton"
         android:id="@+id/toggleButtonOnOff"
         android:checked="false"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="118dp" />
+        android:layout_above="@+id/checkBoxStart"
+        android:layout_toLeftOf="@+id/textViewTV2"
+        android:layout_toStartOf="@+id/textViewTV2" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -105,5 +105,16 @@
         android:layout_toLeftOf="@+id/toggleButtonOnOff"
         android:layout_toStartOf="@+id/toggleButtonOnOff"
         android:layout_marginBottom="59dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:id="@+id/buttonRefresh"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/toggleButtonOnOff"
+        android:layout_alignEnd="@+id/toggleButtonOnOff" />
+
 
 </RelativeLayout>

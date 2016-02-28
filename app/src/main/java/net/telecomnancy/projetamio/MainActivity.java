@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -82,6 +83,18 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor=sharedPreferences.edit();
                 editor.putBoolean(CBONSTARTSTATE_KEY,state);
                 editor.commit();
+            }
+        });
+
+        // liaison du button refresh
+        final TextView tv_result = (TextView) findViewById(R.id.textViewTV4);
+        final Button b_refresh = (Button) findViewById(R.id.buttonRefresh);
+        b_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask();
+                downloadWebpageTask.setTextView(tv_result);
+                downloadWebpageTask.execute(getString(R.string.url_API));
             }
         });
     }
