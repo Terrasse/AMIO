@@ -1,36 +1,35 @@
 package net.telecomnancy.projetamio;
 
+import java.util.Date;
+
 /**
  * Created by sam on 28/02/2016.
  */
 public class IotlabData {
-    private long timestamp;
-    private String label;
+    private Date date;
+    private IotlabType type;
     private String id;
     private double value;
 
     public IotlabData(){}
-    public IotlabData( String id, long timestamp, String label,double value){
+    public IotlabData( String id, long timestamp, IotlabType type,double value){
         this.id = id;
-        this.label=label;
-        this.timestamp=timestamp;
+        this.type=type;
+        this.date=new Date(timestamp);;
         this.value=value;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public Date getDate() { return date;}
+
+    public void setDate(long timestamp) { this.date = new Date(timestamp); }
+    public void setDate(Date date) { this.date = date; }
+
+    public IotlabType getLabel() {
+        return type;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+    public void setLabel(IotlabType type) {
+        this.type = type;
     }
 
     public String getId() {

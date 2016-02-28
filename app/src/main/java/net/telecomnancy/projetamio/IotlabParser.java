@@ -3,7 +3,6 @@ package net.telecomnancy.projetamio;
 import android.util.JsonReader;
 import android.util.Log;
 
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,7 @@ public class IotlabParser {
     public static final String CHAMP_VALUE ="value";
 
     public static List<IotlabData> getIotlabDatas(String json) throws IOException {
+
         JsonReader reader = new JsonReader(new StringReader(json));
         try {
             return readIotlabDataArray(reader);
@@ -33,17 +33,23 @@ public class IotlabParser {
     private static List<IotlabData>  readIotlabDataArray(JsonReader reader) throws IOException {
         List<IotlabData>  datas = new ArrayList();
 
-        reader.beginArray();
+
+        reader.beginObject();
         while (reader.hasNext()) {
-            datas.add(readIotlabData(reader));
+            String name = reader.nextName();
+            reader.beginArray();
+            while (reader.hasNext()) {
+                datas.add(readIotlabData(reader));
+            }
+            reader.endArray();
         }
-        reader.endArray();
+        reader.endObject();
         return datas;
     }
 
     private static IotlabData readIotlabData(JsonReader reader) throws IOException {
         String id="";
-        String label="";
+        IotlabType type=null;
         long timestamp=0;
         double value=0;
 
@@ -52,8 +58,15 @@ public class IotlabParser {
             String name = reader.nextName();
             if (name.equals(CHAMP_ID)) {
                 id = reader.nextString();
+                new IotlabData(id, timestamp, type, value);
             } else if (name.equals(CHAMP_label)) {
-                label = reader.nextString();
+                String label = reader.nextString();
+                for(IotlabType t : IotlabType.values()){
+                    if(label.equalsIgnoreCase(t.getValue())) {
+                        type = t;
+                        break;
+                    }
+                }
             } else if (name.equals(CHAMP_TIMESTAMP)) {
                 timestamp = reader.nextLong();
             } else if (name.equals(CHAMP_VALUE)) {
@@ -63,6 +76,6 @@ public class IotlabParser {
             }
         }
         reader.endObject();
-        return new IotlabData(id, timestamp, label, value);
+        return new IotlabData(id, timestamp, type, value);
     }
 }
