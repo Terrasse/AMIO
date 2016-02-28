@@ -20,8 +20,8 @@ import android.widget.ToggleButton;
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
 
-    public final String CBONSTARTSTATE_KEY="key_CBOnStartState";
-    public final String PREFERENCES_KEY="key_PREFERENCES";
+    public final static String CBONSTARTSTATE_KEY="key_CBOnStartState";
+    public final static String PREFERENCES_KEY="key_PREFERENCES";
     public SharedPreferences sharedPreferences;
 
 
@@ -116,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d("MainActivity", "Arret du programme");
+        Log.d("MainActivity", "Arret" +
+                "" +
+                " du programme");
         stopService(this.i);
         super.onDestroy();
     }
