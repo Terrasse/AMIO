@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         this.i= new Intent(this,MainService.class);
 
         // récupération des différents objets graphiques concernant le MainService
-        ToggleButton b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
+        final ToggleButton b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
         final TextView b_tv2 = (TextView) findViewById(R.id.textViewTV2);
 
         Log.d("MainActivity", "Création du listener toogleButton/OnOff");
@@ -92,9 +92,8 @@ public class MainActivity extends AppCompatActivity {
         b_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask();
-                downloadWebpageTask.setTextView(tv_result);
-                downloadWebpageTask.execute(getString(R.string.url_API));
+                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask(getApplicationContext(),tv_result);
+                downloadWebpageTask.execute(getString(R.string.API_url));
             }
         });
     }
