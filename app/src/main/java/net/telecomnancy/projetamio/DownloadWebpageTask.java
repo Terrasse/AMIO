@@ -12,13 +12,14 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by Terry on 28/02/2016.
  */
-public class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+public class DownloadWebpageTask extends AsyncTask<String, Void, List<IotlabData>> {
     private TextView textView;
-    private int id;
+    private int status;
 
     public TextView getTextView() {
         return textView;
@@ -29,25 +30,25 @@ public class DownloadWebpageTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... urls) {
+    protected List<IotlabData> doInBackground(String... urls) {
         // params comes from the execute() call: params[0] is the url.
         try {
-            Log.d("DonwloadWebpageTask", "GET : "+urls[0]);
-            return downloadUrl(urls[0]);
+            Log.d("DonwloadWebpageTask", "GET : " + urls[0]);
+            return IotlabParser.getIotlabDatas(downloadUrl(urls[0]));
 
-        } catch (IOException e) {
+        } catch (IOException |FailedConnectionException e) {
             Log.d("DonwloadWebpageTask", "GET : "+urls[0]+" failed");
-            return "Unable to retrieve web page. URL may be invalid.";
+            return null;
         }
     }
 
     // onPostExecute displays the results of the AsyncTask.
     @Override
-    protected void onPostExecute(String result) {
-        textView.setText(result);
+    protected void onPostExecute(List<IotlabData> result) {
+        textView.setText(result.toString());
     }
 
-    private String downloadUrl(String myurl) throws IOException {
+    private String downloadUrl(String myurl) throws IOException,FailedConnectionException {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
         // web page content.
@@ -56,13 +57,16 @@ public class DownloadWebpageTask extends AsyncTask<String, Void, String> {
         try {
             URL url = new URL(myurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setReadTimeout(100000 /* milliseconds */);
+            conn.setConnectTimeout(150000 /* milliseconds */);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             // Starts the query
             conn.connect();
-            int response = conn.getResponseCode();
+            status = conn.getResponseCode();
+            if(status!=200){
+                throw new FailedConnectionException("Failed connection to the webService");
+            }
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
