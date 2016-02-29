@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
 
     public final static String CBONSTARTSTATE_KEY="key_CBOnStartState";
+    public final static String PLAGE_HORAIRE_KEY="key_plageHoraire";
+    public final static String MAIL_KEY="key_mail";
     public final static String PREFERENCES_KEY="key_PREFERENCES";
     public SharedPreferences sharedPreferences;
 
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         b_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask(getApplicationContext(),tv_result);
+                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask(getApplicationContext(), tv_result);
                 downloadWebpageTask.execute(getString(R.string.API_url));
             }
         });
