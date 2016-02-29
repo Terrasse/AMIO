@@ -3,5 +3,4 @@
     <integer name="PollingService_period">30000</integer>
     <string name="API_url">http://iotlab.telecomnancy.eu/rest/data/1/temperature/last</string>
     <string name="PollingService_started">0</string>
-
 </resources>
