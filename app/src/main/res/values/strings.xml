@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ProjetAMIO</string>
     <string name="action_settings">Settings</string>
-    <string name="API_url">http://iotlab.telecomnancy.eu/rest/data/1/temperature/last</string>
     <string name="API_failed">Failed to retrieve data</string>
+    <string name="PollingService_label">PollingService</string>
+    <string name="PollingService_disconnected">Disconnected from PollingService</string>
+    <string name="PollingService_connected">Connected to PollingService</string>
 </resources>

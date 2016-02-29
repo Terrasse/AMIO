@@ -48,7 +48,17 @@ public class IotlabData {
     public void setValue(double value) {
         this.value = value;
     }
+    
     public static IotlabData newRandomMote(String id,IotlabType type){
         return new IotlabData(id,System.currentTimeMillis(),type,new Random(System.currentTimeMillis()).nextInt(2000)/10.0);
+
+    @Override
+    public String toString() {
+        return "IotlabData{" +
+                "timestamp=" + timestamp +
+                ", label='" + label + '\'' +
+                ", id='" + id + '\'' +
+                ", value=" + value +
+                '}';
     }
 }

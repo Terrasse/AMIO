@@ -1,26 +1,31 @@
 package net.telecomnancy.projetamio;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
-
     public final static String CBONSTARTSTATE_KEY="key_CBOnStartState";
     public final static String PLAGE_HORAIRE_KEY="key_plageHoraire";
     public final static String MAIL_KEY="key_mail";
@@ -29,7 +34,59 @@ public class MainActivity extends AppCompatActivity {
 
 
     // My Service
-    Intent i;
+    private PollingService mPollingService;
+    private Intent mPoolingServiceIntend;
+    private boolean mPollingService_isBound;
+
+    // My interface
+    public TextView tv_2, tv_4, tv_6, tv_archive  ;
+    public CheckBox b_StartAtBoot;
+    public ToggleButton b_onOff;
+
+    // Messengers
+    Messenger mServiceMessenger = null;
+    Messenger mMessenger = new Messenger(new MainIncomingHandler());
+
+
+    // handler qui va reçevoir les notifications du service
+    class MainIncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d("MainIncomingHandler","Reception d'un message");
+            switch (msg.what) {
+                case PollingService.MSG_SET_TV4:
+                    tv_4.setText(mPollingService.getData().get(0).toString());
+                    break;
+                case PollingService.MSG_CALLBACK_CLIENT:
+                    Log.d("MainIncomingHandler","Callback reçu");
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    // va permettre d'envoyer un message au service
+    private ServiceConnection networkServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mServiceMessenger = new Messenger(service);
+            try {
+                Message msg = Message.obtain(null,PollingService.MSG_REGISTER_CLIENT);
+                msg.replyTo = mMessenger;
+                mServiceMessenger.send(msg);
+                Log.d("MainActivity", getString(R.string.PollingService_connected));
+            } catch (RemoteException e) {
+                // Here, the service has crashed even before we were able to connect
+            }
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been unexpectedly disconnected - process crashed.
+            mServiceMessenger = null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,25 +96,30 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // instanciation du service
-        this.i= new Intent(this,MainService.class);
-
-        // récupération des différents objets graphiques concernant le MainService
-        final ToggleButton b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
-        final TextView b_tv2 = (TextView) findViewById(R.id.textViewTV2);
+        // récupération des différents objets graphiques concernant le PollingService
+        b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
+        this.tv_2 = (TextView) findViewById(R.id.textViewTV2);
 
         Log.d("MainActivity", "Création du listener toogleButton/OnOff");
+
+        mPoolingServiceIntend = new Intent(this, PollingService.class);
+
+        if (PollingService.isRunning()) {
+            doBindService();
+        }
 
         // creation du listener du bouton OnOff pour l'arrêt de le demarrage du service
         b_onOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    startService(i);
-                    b_tv2.setText("en cours");
+                    tv_2.setText("en cours");
+                    startService(mPoolingServiceIntend);
+                    doBindService();
                 } else {
-                    stopService(i);
-                    b_tv2.setText("arrêté");
+                    tv_2.setText("arrêté");
+                    doUnbindService();
+                    stopService(mPoolingServiceIntend);
                 }
             }
         });
@@ -65,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         // récupération de la checkbox StartAtBoot
-        CheckBox b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
+        this.b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
 
         // prise en compte des preferences de l'application
         b_StartAtBoot.setChecked(sharedPreferences.getBoolean(CBONSTARTSTATE_KEY,false));
@@ -73,29 +135,18 @@ public class MainActivity extends AppCompatActivity {
         b_StartAtBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean state=false;
-                if(isChecked) {
+                boolean state = false;
+                if (isChecked) {
                     state = true;
-                    Log.d("MainActivity","L'application est lancé au démarrage du smartphone");
+                    Log.d("MainActivity", "L'application est lancé au démarrage du smartphone");
                 } else {
                     state = false;
-                    Log.d("MainActivity","L'application n'est pas lancé au démarrage du smartphone");
+                    Log.d("MainActivity", "L'application n'est pas lancé au démarrage du smartphone");
                 }
                 // enregistrement de la modification dans les préferences
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putBoolean(CBONSTARTSTATE_KEY,state);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(CBONSTARTSTATE_KEY, state);
                 editor.commit();
-            }
-        });
-
-        // liaison du button refresh
-        final TextView tv_result = (TextView) findViewById(R.id.textViewTV4);
-        final Button b_refresh = (Button) findViewById(R.id.buttonRefresh);
-        b_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DownloadWebpageTask downloadWebpageTask = new DownloadWebpageTask(getApplicationContext(), tv_result);
-                downloadWebpageTask.execute(getString(R.string.API_url));
             }
         });
     }
@@ -130,10 +181,37 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d("MainActivity", "Arret" +
-                "" +
-                " du programme");
-        stopService(this.i);
+        Log.d("MainActivity", "Arret du programme");
         super.onDestroy();
     }
+
+    void doBindService() {
+        Log.d("MainActivity", "Bind PollingService");
+        bindService(mPoolingServiceIntend, networkServiceConnection, Context.BIND_AUTO_CREATE);
+        mPollingService_isBound = true;
+        tv_2.setText("connected");
+
+    }
+
+    void doUnbindService() {
+        Log.d("MainActivity", "Unbind PollingService");
+        if (mPollingService_isBound) {
+            // If we have received the service, and hence registered with it, then now is the time to unregister.
+            if (mServiceMessenger  != null) {
+                try {
+                    Message msg = Message.obtain(null, PollingService.MSG_UNREGISTER_CLIENT);
+                    msg.replyTo = mMessenger;
+                    mServiceMessenger.send(msg);
+                }
+                catch (RemoteException e) {
+                    // There is nothing special we need to do if the service has crashed.
+                }
+            }
+            // Detach our existing connection.
+            unbindService(networkServiceConnection);
+            mPollingService_isBound = false;
+            tv_2.setText("disconnected");
+        }
+    }
+
 }

@@ -22,7 +22,7 @@ public class MyBootBroadcastReceiver extends BroadcastReceiver {
 
         if(startOnBoot){
             Log.d("MyBootBroadcastReceiver", "Demarrage de MyService : ");
-            Intent startServiceIntent = new Intent(context, MainService.class);
+            Intent startServiceIntent = new Intent(context, PollingService.class);
             context.startService(startServiceIntent);
         }
 
