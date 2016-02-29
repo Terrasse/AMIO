@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class IotlabParser {
     public static final String CHAMP_TIMESTAMP ="timestamp";
-    public static final String CHAMP_label ="timestamp";
+    public static final String CHAMP_label ="label";
     public static final String CHAMP_ID ="mote";
     public static final String CHAMP_VALUE ="value";
 

@@ -1,6 +1,7 @@
 package net.telecomnancy.projetamio;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by sam on 28/02/2016.
@@ -24,11 +25,11 @@ public class IotlabData {
     public void setDate(long timestamp) { this.date = new Date(timestamp); }
     public void setDate(Date date) { this.date = date; }
 
-    public IotlabType getLabel() {
+    public IotlabType getType() {
         return type;
     }
 
-    public void setLabel(IotlabType type) {
+    public void setType(IotlabType type) {
         this.type = type;
     }
 
@@ -46,5 +47,8 @@ public class IotlabData {
 
     public void setValue(double value) {
         this.value = value;
+    }
+    public static IotlabData newRandomMote(String id,IotlabType type){
+        return new IotlabData(id,System.currentTimeMillis(),type,new Random(System.currentTimeMillis()).nextInt(2000)/10.0);
     }
 }

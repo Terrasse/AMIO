@@ -5,7 +5,9 @@ package net.telecomnancy.projetamio;
  */
 public enum IotlabType {
     TEMPERATURE("temperature"),
-    LIGHT("light");
+    LIGHT1("light1"),
+    LIGHT2("light2"),
+    LIGHT("humitdity");
 
     protected String value;
     private IotlabType(String value){
