@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainIncomingHandler","Reception d'un message");
             switch (msg.what) {
                 case PollingService.MSG_SET_TV4:
-                    tv_4.setText(mPollingService.getData().get(0).toString());
                     break;
                 case PollingService.MSG_CALLBACK_CLIENT:
                     Log.d("MainIncomingHandler","Callback reçu");

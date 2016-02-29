@@ -49,14 +49,15 @@ public class IotlabData {
         this.value = value;
     }
     
-    public static IotlabData newRandomMote(String id,IotlabType type){
-        return new IotlabData(id,System.currentTimeMillis(),type,new Random(System.currentTimeMillis()).nextInt(2000)/10.0);
+    public static IotlabData newRandomMote(String id,IotlabType type) {
+        return new IotlabData(id, System.currentTimeMillis(), type, new Random(System.currentTimeMillis()).nextInt(2000) / 10.0);
+    }
 
     @Override
     public String toString() {
         return "IotlabData{" +
-                "timestamp=" + timestamp +
-                ", label='" + label + '\'' +
+                "timestamp=" + date.toString() +
+                ", label='" + type.value + '\'' +
                 ", id='" + id + '\'' +
                 ", value=" + value +
                 '}';
