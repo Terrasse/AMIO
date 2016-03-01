@@ -51,8 +51,7 @@
         android:id="@+id/textViewTV3"
         android:layout_below="@+id/textViewTV1"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="21dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,30 +59,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="N/A"
         android:id="@+id/textViewTV4"
-        android:layout_above="@+id/textViewTV5"
-        android:layout_alignLeft="@+id/textViewTV2"
-        android:layout_alignStart="@+id/textViewTV2" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Last alert :"
-        android:id="@+id/textViewTV5"
-        android:layout_below="@+id/textViewTV3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="21dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="N/A"
-        android:id="@+id/textViewTV6"
-        android:layout_alignTop="@+id/textViewTV5"
-        android:layout_alignLeft="@+id/textViewTV4"
-        android:layout_alignStart="@+id/textViewTV4" />
+        android:layout_alignTop="@+id/textViewTV3"
+        android:layout_toRightOf="@+id/toggleButtonOnOff"
+        android:layout_toEndOf="@+id/toggleButtonOnOff" />
 
     <ToggleButton
         android:layout_width="wrap_content"
@@ -91,7 +69,7 @@
         android:text="New ToggleButton"
         android:id="@+id/toggleButtonOnOff"
         android:checked="false"
-        android:layout_above="@+id/checkBoxStart"
+        android:layout_alignBottom="@+id/checkBoxStart"
         android:layout_toLeftOf="@+id/textViewTV2"
         android:layout_toStartOf="@+id/textViewTV2" />
 
@@ -100,33 +78,10 @@
         android:layout_height="wrap_content"
         android:text="Start at boot"
         android:id="@+id/checkBoxStart"
+        android:layout_marginBottom="46dp"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/toggleButtonOnOff"
-        android:layout_toStartOf="@+id/toggleButtonOnOff"
-        android:layout_marginBottom="59dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Refresh"
-        android:id="@+id/buttonRefresh"
-        android:layout_below="@+id/textViewTV6"
-        android:layout_toRightOf="@+id/toggleButtonOnOff"
-        android:layout_toEndOf="@+id/toggleButtonOnOff" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/tv_archive"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scrollbars = "vertical"
-        android:layout_above="@+id/toggleButtonOnOff"
-        android:layout_below="@+id/textView2" />
+        android:layout_alignParentStart="true" />
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
@@ -135,15 +90,14 @@
         android:layout_above="@+id/toggleButtonOnOff"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Archive :"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/buttonRefresh"
+        android:id="@+id/listView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textViewTV4"
+        android:layout_alignBottom="@+id/horizontalScrollView" />
 
 
 </RelativeLayout>

@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public TextView tv_2, tv_4, tv_6, tv_archive  ;
     public CheckBox b_StartAtBoot;
     public ToggleButton b_onOff;
+    ListView mListView;
 
     // Messengers
     Messenger mServiceMessenger = null;
@@ -148,6 +151,19 @@ public class MainActivity extends AppCompatActivity {
                 editor.commit();
             }
         });
+
+        // listView
+        mListView = (ListView) findViewById(R.id.listView);
+        String[] prenoms = new String[]{
+                "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
+                "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
+                "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
+                "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
+                "Yann", "Zoé"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                android.R.layout.simple_list_item_1, prenoms);
+        mListView.setAdapter(adapter);
     }
 
     @Override
