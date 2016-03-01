@@ -24,6 +24,7 @@ public class SettingActivity extends AppCompatActivity {
     public final static String ON_START_STATE_KEY="key_onStartState";
     public final static String PLAGE_HORAIRE_KEY="key_plageHoraire";
     public final static String MAIL_KEY="key_mail";
+    public final static String LIGHT_LEVEL_KEY="key_lightLevel";
     public final static String PREFERENCES_KEY="key_preference";
 
     public SharedPreferences sharedPreferences;
@@ -61,6 +62,8 @@ public class SettingActivity extends AppCompatActivity {
 
     CheckBox b_StartAtBoot;
 
+    NumberPicker npLight;
+
 
     Intent i;
     @Override
@@ -86,6 +89,8 @@ public class SettingActivity extends AppCompatActivity {
                         Log.e(SettingActivity.class.getName(), "Fail to convert preferences: " + e.getMessage());
                     }
                     editor.putString(MAIL_KEY, mail.getText().toString());
+                    editor.putInt(LIGHT_LEVEL_KEY, npLight.getValue());
+                    editor.putBoolean(ON_START_STATE_KEY, b_StartAtBoot.isChecked());
                     editor.commit();
                     SettingActivity.this.finish();
                 }
@@ -170,25 +175,14 @@ public class SettingActivity extends AppCompatActivity {
         b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
 
         // prise en compte des preferences de l'application
-        b_StartAtBoot.setChecked(sharedPreferences.getBoolean(ON_START_STATE_KEY,false));
+        b_StartAtBoot.setChecked(sharedPreferences.getBoolean(ON_START_STATE_KEY, false));
 
-        b_StartAtBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean state = false;
-                if (isChecked) {
-                    state = true;
-                    Log.d("MainActivity", "L'application est lancé au démarrage du smartphone");
-                } else {
-                    state = false;
-                    Log.d("MainActivity", "L'application n'est pas lancé au démarrage du smartphone");
-                }
-                // enregistrement de la modification dans les préferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(ON_START_STATE_KEY, state);
-                editor.commit();
-            }
-        });
+
+        npLight = (NumberPicker) findViewById(R.id.lightpicker);
+        npLight.setMinValue(0);
+        npLight.setMaxValue(1000);
+        npLight.setValue(sharedPreferences.getInt(LIGHT_LEVEL_KEY,250));
+
     }
 
     private void initValue(CheckBox cb, final NumberPicker start, final NumberPicker end, PlageHoraire.CreneauHoraire ch) {

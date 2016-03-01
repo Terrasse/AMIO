@@ -242,22 +242,47 @@
         android:layout_row="14"
         android:layout_column="0" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Active light detection level"
+        android:id="@+id/textView6"
+        android:layout_row="15"
+        android:layout_column="0" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:id="@+id/lightpicker"
+        android:layout_gravity="center_vertical"
+        android:layout_row="15"
+        android:layout_column="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/textView4"
+        android:layout_row="16"
+        android:layout_column="0" />
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start at boot"
         android:id="@+id/checkBoxStart"
         android:layout_marginBottom="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_row="17"
+        android:layout_column="0"/>
 
     <Button
         android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:text="ok"
         android:id="@+id/save"
-        android:layout_row="19"
+        android:layout_row="17"
         android:layout_column="2" />
 
 </GridLayout>

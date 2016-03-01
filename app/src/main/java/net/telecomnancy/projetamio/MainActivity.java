@@ -38,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
     // My interface
     public TextView tv_2, tv_4, tv_6, tv_archive  ;
-    public CheckBox b_StartAtBoot;
     public ToggleButton b_onOff;
     ListView mListView;
+
 
     // Messengers
     Messenger mServiceMessenger = null;
@@ -93,6 +93,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //action du bouton setting
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ;
+                MainActivity.this.startActivity(new Intent(MainActivity.this ,SettingActivity.class));
+                return false;
+            }
+        });
+//        toolbar.getMenu().getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                ;
+//                MainActivity.this.startActivity(new Intent(MainActivity.this ,SettingActivity.class));
+//                return false;
+//            }
+//        });
 
         // répération des préferences de l'application
         sharedPreferences = getSharedPreferences(SettingActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
