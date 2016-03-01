@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class PollingService extends Service {
     static final int MSG_SET_TV4 = 1;
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_REGISTER_CLIENT = 3;
-    static final int MSG_SET_STRING_VALUE = 4;
+    static final int MSG_UPDATE = 4;
     static final int MSG_CALLBACK_CLIENT = 5;
 
     // Task
@@ -233,9 +235,30 @@ public class PollingService extends Service {
         }*/
 
     public void notifyAllClient(List<IotlabData> list){
+        // TODO : refactoring -> permet de récupérer de passer d'un IotlabData à un liste de motes
+        History history=new History();
+        history.addAll(list);
+        List<Mote> motes=new ArrayList<Mote>();
+        for(String currentKey:history.getHistory().keySet()) {
+            motes.add(new Mote(history,currentKey));
+        }
+        // transformation en json
+        String stringMotes="";
+        try {
+            stringMotes=MotesUtils.toJSON(motes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // send des motes aux clients
         for (int i = 0; i < clients.size(); i++) {
             try {
-                clients.get(i).send(Message.obtain(null, MSG_SET_TV4));
+                //Send data as a String
+                Bundle b = new Bundle();
+                b.putString("str1",stringMotes);
+                Message msg = Message.obtain(null, MSG_UPDATE);
+                msg.setData(b);
+                clients.get(i).send(msg);
             } catch (RemoteException e) {
                 // If we get here, the client is dead, and we should remove it from the list
                 Log.d("PollingService","Client removed : " + clients.get(i));

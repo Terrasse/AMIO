@@ -26,13 +26,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
     public SharedPreferences sharedPreferences;
 
 
     // My Service
-    private PollingService mPollingService;
     private Intent mPoolingServiceIntend;
     private boolean mPollingService_isBound;
 
@@ -41,19 +42,25 @@ public class MainActivity extends AppCompatActivity {
     public ToggleButton b_onOff;
     ListView mListView;
 
+    // My objects
+    List<Mote> motes;
 
     // Messengers
     Messenger mServiceMessenger = null;
-    Messenger mMessenger = new Messenger(new MainIncomingHandler());
+    Messenger mMessenger = new Messenger(new IncomingHandler());
 
 
     // handler qui va reçevoir les notifications du service
-    class MainIncomingHandler extends Handler {
+    private class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            Log.d("MainIncomingHandler","Reception d'un message");
+
             switch (msg.what) {
-                case PollingService.MSG_SET_TV4:
+                case PollingService.MSG_UPDATE:
+                    Log.d("MainActivity","update view");
+                    String str1 = msg.getData().getString("str1");
+                    MoteAdapter adapter = new MoteAdapter(MainActivity.this, motes);
+                    mListView.setAdapter(adapter);
                     break;
                 case PollingService.MSG_CALLBACK_CLIENT:
                     Log.d("MainIncomingHandler","Callback reçu");

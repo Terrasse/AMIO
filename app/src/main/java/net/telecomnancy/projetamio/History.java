@@ -59,7 +59,7 @@ public class History {
     }
 
     public boolean haslightOn(String id) throws MoteDataException{
-        List<IotlabData> list = getMoteHistory(id, IotlabType.LIGHT);
+        List<IotlabData> list = getMoteHistory(id, IotlabType.HUMIDITY);
         if(list==null){
             throw new MoteDataException("No data for this mote : "+ id);
         }
