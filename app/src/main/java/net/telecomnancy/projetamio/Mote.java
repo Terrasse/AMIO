@@ -2,16 +2,18 @@ package net.telecomnancy.projetamio;
 
 import android.graphics.Color;
 
+import java.util.Date;
+
 /**
  * Created by Terry on 01/03/2016.
  */
 public class Mote {
-    public static int LIGHT_ON_OFF_STEP = 250;
 
     private String name;
     private String temperature;
     private String humidity;
     private String light;
+    private Boolean lastLightActive=null;
     private String lastalert;
 
     public String getLastalert() {
@@ -36,13 +38,14 @@ public class Mote {
 
     }
 
-    public Mote(String name, String temperature, String humidity, String lightstatus, String lastupdate, String lastalert) {
+    public Mote(String name, String temperature, String humidity, String lightstatus, String lastupdate, String lastalert,Boolean lastLightActive) {
         this.name = name;
         this.temperature = temperature;
         this.humidity = humidity;
         this.light = lightstatus;
         this.lastupdate = lastupdate;
         this.lastalert = lastalert;
+        this.lastLightActive=lastLightActive;
     }
 
     public Mote(History history,String id){
@@ -86,6 +89,14 @@ public class Mote {
         this.light = light;
     }
 
+    public Boolean getLastLightActive() {
+        return lastLightActive;
+    }
+
+    public void setLastLightActive(Boolean lastLightActive) {
+        this.lastLightActive = lastLightActive;
+    }
+
     @Override
     public String toString() {
         return "Mote{" +
@@ -98,8 +109,27 @@ public class Mote {
 
     public int getLightColor(){
         int value= Double.valueOf(this.light).intValue();
-        if(value>LIGHT_ON_OFF_STEP) return Color.GREEN;
-        else if(LIGHT_ON_OFF_STEP>=value && LIGHT_ON_OFF_STEP>0) return Color.BLACK;
+        if(value>MainActivity.LIGHT_ON_OFF_STEP) return Color.GREEN;
+        else if(MainActivity.LIGHT_ON_OFF_STEP>=value && MainActivity.LIGHT_ON_OFF_STEP>0) return Color.BLACK;
         else return Color.LTGRAY;
     }
+    public boolean isOn(){
+        int value= Double.valueOf(this.light).intValue();
+        return value>MainActivity.LIGHT_ON_OFF_STEP;
+    }
+
+
+    public boolean becomeActive(){
+        if(lastLightActive==null){
+            return false;
+        }
+        if(!lastLightActive && isOn()){
+            return true;
+        }
+        return false;
+    }
+    public Date getDate(){
+        return new Date(Long.valueOf(getLastupdate())*1000);
+    }
+
 }

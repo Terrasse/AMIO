@@ -233,26 +233,7 @@ public class PollingService extends Service {
         return super.stopService(name);
     }
 
-    /*    private void showNotification() {
-            // In this sample, we'll use the same text for the ticker and the expanded notification
-            CharSequence text = getText(R.string.PollingService_started);
 
-            // The PendingIntent to launch our activity if the user selects this notification
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,new Intent(this, MainActivity.IncomingHandler.class), 0);
-
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_polling)
-                            .setContentTitle("My notification")
-                            .setContentText("Hello World!");
-            // Set the info for the views that show in the notification panel.
-            // Sets an ID for the notification
-            int mNotificationId = 001;
-            // Gets an instance of the NotificationManager service
-
-            // Builds the notification and issues it.
-            this.mNM.notify(mNotificationId, mBuilder.build());
-        }*/
 
     public void notifyAllClient(){
         // TODO : refactoring -> permet de récupérer de passer d'un IotlabData à un liste de motes

@@ -30,6 +30,9 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static int LIGHT_ON_OFF_STEP = 250;
+
+
     // sharedPreferencies
     public SharedPreferences sharedPreferences;
 
@@ -67,6 +70,19 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     mListView.setAdapter(adapter);
+                    for(Mote m : adapter.getItems()){
+                        if(m.becomeActive()){
+                            PlageHoraire ph = getPreferedPlageHoraire();
+                            switch (PlageHoraire.OnPlage(ph,m.getDate())){
+                                case NOTIFICATION:
+                                    //TODO
+                                    break;
+                                case EMAIL:
+                                    new MailService().execute(getPreferedMail(),m.getName());
+                                    break;
+                            }
+                        }
+                    }
                     break;
                 case PollingService.MSG_CALLBACK_CLIENT:
                     Log.d("MainIncomingHandler","Callback reçu");
@@ -197,13 +213,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "Unbind PollingService");
         if (mPollingService_isBound) {
             // If we have received the service, and hence registered with it, then now is the time to unregister.
-            if (mServiceMessenger  != null) {
+            if (mServiceMessenger != null) {
                 try {
                     Message msg = Message.obtain(null, PollingService.MSG_UNREGISTER_CLIENT);
                     msg.replyTo = mMessenger;
                     mServiceMessenger.send(msg);
-                }
-                catch (RemoteException e) {
+                } catch (RemoteException e) {
                     // There is nothing special we need to do if the service has crashed.
                 }
             }
@@ -212,6 +227,24 @@ public class MainActivity extends AppCompatActivity {
             mPollingService_isBound = false;
             tv_2.setText("disconnected");
         }
+    }
+    static void setLightOnOffStep(int value){
+        LIGHT_ON_OFF_STEP=value;
+    }
+
+    public PlageHoraire getPreferedPlageHoraire(){
+        try {
+            return PlageHoraire.fromJson(sharedPreferences.getString(SettingActivity.PLAGE_HORAIRE_KEY, ""));
+        }catch (Exception e){
+            Log.e(MainActivity.class.getName(),"Erreur to get pref plageHoraire");
+            return new PlageHoraire();
+        }
+    }
+    public String getPreferedMail(){
+        return sharedPreferences.getString(SettingActivity.MAIL_KEY, "");
+    }
+    public String getPreferedLightLevel(){
+        return sharedPreferences.getString(SettingActivity.LIGHT_LEVEL_KEY, "");
     }
 
 }

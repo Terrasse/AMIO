@@ -93,6 +93,7 @@ public class SettingActivity extends AppCompatActivity {
                     editor.putString(MAIL_KEY, mail.getText().toString());
                     editor.putInt(LIGHT_LEVEL_KEY, npLight.getValue());
                     editor.putBoolean(ON_START_STATE_KEY, b_StartAtBoot.isChecked());
+                    MainActivity.setLightOnOffStep(npLight.getValue());
                     editor.commit();
                     SettingActivity.this.finish();
                 }
@@ -189,7 +190,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void initValue(CheckBox cb, final Spinner start, final Spinner end, PlageHoraire.CreneauHoraire ch) {
         cb.setChecked(true);
-        setValue(start,ch.getAfternoon());
+        setValue(start, ch.getAfternoon());
         setValue(end,ch.getNight());
     }
 

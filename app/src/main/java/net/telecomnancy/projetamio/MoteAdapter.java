@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +45,7 @@ public class MoteAdapter extends ArrayAdapter<Mote> {
         //getItem(position) va récupérer l'item [position] de la List<Tweet> tweets
         Mote current = getItem(position);
 
+
         //il ne reste plus qu'à remplir notre vue
         viewHolder.temperature.setText("Temperature : "+current.getTemperature()+"°C");
         viewHolder.humidity.setText("Humidity : " + current.getHumidity()+"%");
@@ -63,5 +65,21 @@ public class MoteAdapter extends ArrayAdapter<Mote> {
             public ImageView status;
             public TextView last_alert;
             public TextView last_update;
+
         }
+    public List<Mote> getItems(){
+        List<Mote> motes= new ArrayList<>();
+        boolean haveNext = true;
+        int i=0;
+        do{
+            try {
+                Mote m = getItem(i);
+                i++;
+                motes.add(m);
+            }catch(Exception e){
+                haveNext=false;
+            }
+        }while(haveNext);
+        return motes;
+    }
 }
