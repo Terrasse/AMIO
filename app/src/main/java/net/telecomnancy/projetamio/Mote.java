@@ -6,35 +6,52 @@ import android.graphics.Color;
  * Created by Terry on 01/03/2016.
  */
 public class Mote {
+    public static int LIGHT_ON_OFF_STEP = 250;
+
     private String name;
     private String temperature;
     private String humidity;
-    private int lightstatus;
+    private String light;
+    private String lastalert;
+
+    public String getLastalert() {
+        return lastalert;
+    }
+
+    public void setLastalert(String lastalert) {
+        this.lastalert = lastalert;
+    }
+
+    public String getLastupdate() {
+        return lastupdate;
+    }
+
+    public void setLastupdate(String lastupdate) {
+        this.lastupdate = lastupdate;
+    }
+
+    private String lastupdate;
 
     public Mote(){
 
     }
 
-    public Mote(String name, String temperature, String humidity, int lightstatus) {
+    public Mote(String name, String temperature, String humidity, String lightstatus, String lastupdate, String lastalert) {
         this.name = name;
         this.temperature = temperature;
         this.humidity = humidity;
-        this.lightstatus = lightstatus;
+        this.light = lightstatus;
+        this.lastupdate = lastupdate;
+        this.lastalert = lastalert;
     }
 
     public Mote(History history,String id){
         this.temperature=String.valueOf(history.getMoteHistory(id,IotlabType.TEMPERATURE).get(0).getValue());
         this.humidity=String.valueOf(history.getMoteHistory(id, IotlabType.HUMIDITY).get(0).getValue());
-       try {
-            if(history.haslightOn(id)){
-                this.lightstatus=Color.GREEN;
-            }else {
-                this.lightstatus=Color.BLACK;
-            }
-       } catch (MoteDataException e) {
-           this.lightstatus=Color.GRAY;
-       }
+        this.light=String.valueOf(history.getMoteHistory(id,IotlabType.LIGHT1).get(0).getValue());
         this.name=id;
+        this.lastupdate=String.valueOf(history.getMoteHistory(id).get(0).getDateInTimestamp());
+        this.lastalert=String.valueOf(history.getLastalert(id));
     }
 
     public String getName() {
@@ -61,12 +78,12 @@ public class Mote {
         this.humidity = humidity;
     }
 
-    public int getLightstatus() {
-        return lightstatus;
+    public String getLight() {
+        return light;
     }
 
-    public void setLightstatus(int lightstatus) {
-        this.lightstatus = lightstatus;
+    public void setLight(String light) {
+        this.light = light;
     }
 
     @Override
@@ -75,7 +92,14 @@ public class Mote {
                 "name='" + name + '\'' +
                 ", temperature='" + temperature + '\'' +
                 ", humidity='" + humidity + '\'' +
-                ", lightstatus=" + lightstatus +
+                ", light=" + light +
                 '}';
+    }
+
+    public int getLightColor(){
+        int value= Double.valueOf(this.light).intValue();
+        if(value>LIGHT_ON_OFF_STEP) return Color.GREEN;
+        else if(LIGHT_ON_OFF_STEP>=value && LIGHT_ON_OFF_STEP>0) return Color.BLACK;
+        else return Color.LTGRAY;
     }
 }

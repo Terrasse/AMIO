@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/status"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         tools:background="#AAA"
         />
 
@@ -43,5 +43,22 @@
         android:layout_below="@+id/temperature"
         tools:text="Humidity : N/A%"
         />
-
+    <TextView
+        android:id="@+id/last_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/humidity"
+        android:layout_below="@+id/humidity"
+        tools:text="Last alert : N/A"
+        />
+    <TextView
+        android:id="@+id/last_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/last_alert"
+        android:layout_below="@+id/last_alert"
+        tools:text="Last update : N/A"
+        />
 </RelativeLayout>

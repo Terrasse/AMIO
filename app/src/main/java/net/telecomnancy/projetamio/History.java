@@ -1,14 +1,15 @@
 package net.telecomnancy.projetamio;
 
-import android.util.Log;
+        import android.util.Log;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+        import java.io.IOException;
+        import java.lang.reflect.Type;
+        import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.Comparator;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
 /**
  * Created by sam on 28/02/2016.
@@ -38,6 +39,7 @@ public class History {
         history.get(mote.getId()).add(mote);
         sortByDate(history.get(mote.getId()));
     }
+
     public List<IotlabData> getMoteHistory(String id, IotlabType type){
         if(!history.containsKey(id)){
             return null;
@@ -85,5 +87,13 @@ public class History {
             return null;
         }
         return l.get(0);
+    }
+
+    public void addJSONIotlabDatas(String json) throws IOException {
+        this.addAll(IotlabParser.getIotlabDatas(json));
+    }
+
+    public String getLastalert(String id){
+        return "none";
     }
 }

@@ -21,7 +21,7 @@ public class MyBootBroadcastReceiver extends BroadcastReceiver {
         Boolean startOnBoot = prefs.getBoolean(SettingActivity.ON_START_STATE_KEY,false);
 
         if(startOnBoot){
-            Log.d("MyBootBroadcastReceiver", "Demarrage de MyService : ");
+            Log.d("MyBootBroadcastReceiver", "Demarrage de PollingService ");
             Intent startServiceIntent = new Intent(context, PollingService.class);
             context.startService(startServiceIntent);
         }

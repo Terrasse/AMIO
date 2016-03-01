@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,9 +58,14 @@ public class MainActivity extends AppCompatActivity {
 
             switch (msg.what) {
                 case PollingService.MSG_UPDATE:
-                    Log.d("MainActivity","update view");
+                    Log.d("MainActivity", "update view");
                     String str1 = msg.getData().getString("str1");
-                    MoteAdapter adapter = new MoteAdapter(MainActivity.this, motes);
+                    MoteAdapter adapter = null;
+                    try {
+                        adapter = new MoteAdapter(MainActivity.this, MotesUtils.fromJson(str1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     mListView.setAdapter(adapter);
                     break;
                 case PollingService.MSG_CALLBACK_CLIENT:
@@ -151,16 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
         // listView
         mListView = (ListView) findViewById(R.id.listView);
-        String[] prenoms = new String[]{
-                "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
-                "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
-                "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
-                "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
-                "Yann", "Zoé"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                android.R.layout.simple_list_item_1, prenoms);
-        mListView.setAdapter(adapter);
     }
 
     @Override

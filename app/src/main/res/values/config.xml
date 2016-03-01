@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="PollingService_period">30000</integer>
-    <string name="API_url">http://iotlab.telecomnancy.eu/rest/data/1/temperature/last</string>
+    <string name="API_url_temperature">http://iotlab.telecomnancy.eu/rest/data/1/temperature/10</string>
+    <string name="API_url_humidity">http://iotlab.telecomnancy.eu/rest/data/1/humidity/10</string>
+    <string name="API_url_light1">http://iotlab.telecomnancy.eu/rest/data/1/light1/10</string>
     <string name="PollingService_started">0</string>
 </resources>

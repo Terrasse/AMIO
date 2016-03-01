@@ -18,6 +18,8 @@ public class MotesUtils {
     public final static String JSON_KEY_HUMIDITY="humidity";
     public final static String JSON_KEY_LIGHTSTATUS="lightstatus";
     public final static String JSON_KEY_NAME="name";
+    public final static String JSON_KEY_TIMESTAMP="timestamp";
+    public final static String JSON_KEY_LASTALERT="lastalert";
 
 
     public final static String toJSON(List<Mote> motes) throws IOException {
@@ -29,13 +31,14 @@ public class MotesUtils {
             jw.beginObject();
             jw.name(JSON_KEY_TEMPERATURE).value(current.getTemperature());
             jw.name(JSON_KEY_HUMIDITY).value(current.getHumidity());
-            jw.name(JSON_KEY_LIGHTSTATUS).value(current.getLightstatus());
+            jw.name(JSON_KEY_LIGHTSTATUS).value(current.getLight());
             jw.name(JSON_KEY_NAME).value(current.getName());
+            jw.name(JSON_KEY_TIMESTAMP).value(current.getLastupdate());
+            jw.name(JSON_KEY_LASTALERT).value(current.getLastalert());
             jw.endObject();
         }
         jw.endArray();
         jw.close();
-        Log.d("MotesUtils", "ToJson result: " + sw.toString());
         return sw.toString();
     }
 
@@ -54,15 +57,18 @@ public class MotesUtils {
                 } else if (name.equals(JSON_KEY_HUMIDITY)) {
                     mote.setHumidity(jr.nextString());
                 } else if (name.equals(JSON_KEY_NAME)) {
-                    mote.setHumidity(jr.nextString());
+                    mote.setName(jr.nextString());
                 } else if (name.equals(JSON_KEY_LIGHTSTATUS)) {
-                    mote.setLightstatus(jr.nextInt());
-                }else {
-                    jr.skipValue();
+                    mote.setLight(jr.nextString());
+                }else if (name.equals(JSON_KEY_TIMESTAMP)) {
+                    mote.setLastupdate(jr.nextString());
+                } else if (name.equals(JSON_KEY_LASTALERT)) {
+                    mote.setLastalert(jr.nextString());
+                } else {
+                        jr.skipValue();
                 }
             }
             motes.add(mote);
-            Log.d("MotesUtils","ToMote result: "+mote.toString());
             jr.endObject();
         }
         jr.endArray();
