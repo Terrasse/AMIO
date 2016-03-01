@@ -210,7 +210,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
-        android:id="@+id/textView"
+        android:id="@+id/textView3"
         android:layout_row="11"
         android:layout_column="0" />
 
@@ -232,6 +232,25 @@
         android:id="@+id/mail"
         android:layout_row="13"
         android:layout_column="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/textView2"
+        android:layout_row="14"
+        android:layout_column="0" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start at boot"
+        android:id="@+id/checkBoxStart"
+        android:layout_marginBottom="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="56dp"

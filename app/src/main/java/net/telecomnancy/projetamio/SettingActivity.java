@@ -21,6 +21,11 @@ import java.util.Calendar;
  */
 public class SettingActivity extends AppCompatActivity {
 
+    public final static String ON_START_STATE_KEY="key_onStartState";
+    public final static String PLAGE_HORAIRE_KEY="key_plageHoraire";
+    public final static String MAIL_KEY="key_mail";
+    public final static String PREFERENCES_KEY="key_preference";
+
     public SharedPreferences sharedPreferences;
 
 
@@ -54,6 +59,7 @@ public class SettingActivity extends AppCompatActivity {
 
     EditText mail;
 
+    CheckBox b_StartAtBoot;
 
 
     Intent i;
@@ -62,7 +68,10 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.settings);
-        Log.d("vsztest", "In second seting Layout");
+
+
+        sharedPreferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+
         final Button b_save = (Button) findViewById(R.id.save);
         if(b_save!=null){
             b_save.setOnClickListener(new View.OnClickListener() {
@@ -72,11 +81,11 @@ public class SettingActivity extends AppCompatActivity {
                     Log.d(SettingActivity.class.getName(), "PlageHoraire : " + ph.toString());
                     SharedPreferences.Editor editor=sharedPreferences.edit();
                     try {
-                        editor.putString(MainActivity.PLAGE_HORAIRE_KEY, PlageHoraire.toJson(ph));
+                        editor.putString(PLAGE_HORAIRE_KEY, PlageHoraire.toJson(ph));
                     } catch (IOException e) {
                         Log.e(SettingActivity.class.getName(), "Fail to convert preferences: " + e.getMessage());
                     }
-                    editor.putString(MainActivity.MAIL_KEY, mail.getText().toString());
+                    editor.putString(MAIL_KEY, mail.getText().toString());
                     editor.commit();
                     SettingActivity.this.finish();
                 }
@@ -117,13 +126,12 @@ public class SettingActivity extends AppCompatActivity {
         initBox(cb7,npS7,npE7);
 
 
-        sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         mail = (EditText) findViewById(R.id.mail);
-        mail.setText(sharedPreferences.getString(MainActivity.MAIL_KEY,""));
+        mail.setText(sharedPreferences.getString(MAIL_KEY,""));
         //GetPreference
 
-        String plageHoraireJson = sharedPreferences.getString(MainActivity.PLAGE_HORAIRE_KEY,"");
+        String plageHoraireJson = sharedPreferences.getString(PLAGE_HORAIRE_KEY,"");
         try {
             if(!(plageHoraireJson==null || plageHoraireJson.isEmpty())){
                 PlageHoraire ph = PlageHoraire.fromJson(plageHoraireJson);
@@ -156,6 +164,31 @@ public class SettingActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(SettingActivity.class.getName(),"Fail to parse preferences: "+e.getMessage());
         }
+
+
+        // récupération de la checkbox StartAtBoot
+        b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
+
+        // prise en compte des preferences de l'application
+        b_StartAtBoot.setChecked(sharedPreferences.getBoolean(ON_START_STATE_KEY,false));
+
+        b_StartAtBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean state = false;
+                if (isChecked) {
+                    state = true;
+                    Log.d("MainActivity", "L'application est lancé au démarrage du smartphone");
+                } else {
+                    state = false;
+                    Log.d("MainActivity", "L'application n'est pas lancé au démarrage du smartphone");
+                }
+                // enregistrement de la modification dans les préferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(ON_START_STATE_KEY, state);
+                editor.commit();
+            }
+        });
     }
 
     private void initValue(CheckBox cb, final NumberPicker start, final NumberPicker end, PlageHoraire.CreneauHoraire ch) {

@@ -28,10 +28,6 @@ import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
-    public final static String CBONSTARTSTATE_KEY="key_CBOnStartState";
-    public final static String PLAGE_HORAIRE_KEY="key_plageHoraire";
-    public final static String MAIL_KEY="key_mail";
-    public final static String PREFERENCES_KEY="key_PREFERENCES";
     public SharedPreferences sharedPreferences;
 
 
@@ -98,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // répération des préferences de l'application
+        sharedPreferences = getSharedPreferences(SettingActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
+
         // récupération des différents objets graphiques concernant le PollingService
         b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
         this.tv_2 = (TextView) findViewById(R.id.textViewTV2);
@@ -123,32 +122,6 @@ public class MainActivity extends AppCompatActivity {
                     doUnbindService();
                     stopService(mPoolingServiceIntend);
                 }
-            }
-        });
-        // répération des préferences de l'application
-        sharedPreferences = getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
-
-        // récupération de la checkbox StartAtBoot
-        this.b_StartAtBoot = (CheckBox) findViewById(R.id.checkBoxStart);
-
-        // prise en compte des preferences de l'application
-        b_StartAtBoot.setChecked(sharedPreferences.getBoolean(CBONSTARTSTATE_KEY,false));
-
-        b_StartAtBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                boolean state = false;
-                if (isChecked) {
-                    state = true;
-                    Log.d("MainActivity", "L'application est lancé au démarrage du smartphone");
-                } else {
-                    state = false;
-                    Log.d("MainActivity", "L'application n'est pas lancé au démarrage du smartphone");
-                }
-                // enregistrement de la modification dans les préferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(CBONSTARTSTATE_KEY, state);
-                editor.commit();
             }
         });
 

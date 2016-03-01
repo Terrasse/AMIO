@@ -17,8 +17,8 @@ public class MyBootBroadcastReceiver extends BroadcastReceiver {
         Log.d("MyBootBroadcastReceiver", "Reception d'un boardcast");
 
         // récupération des préférences de l'utilisateur & demarrage du service
-        SharedPreferences prefs = context.getSharedPreferences(MainActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
-        Boolean startOnBoot = prefs.getBoolean(MainActivity.CBONSTARTSTATE_KEY,false);
+        SharedPreferences prefs = context.getSharedPreferences(SettingActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        Boolean startOnBoot = prefs.getBoolean(SettingActivity.ON_START_STATE_KEY,false);
 
         if(startOnBoot){
             Log.d("MyBootBroadcastReceiver", "Demarrage de MyService : ");
