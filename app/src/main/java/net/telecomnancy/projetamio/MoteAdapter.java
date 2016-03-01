@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * Created by Terry on 01/03/2016.
+ * doc : http://tutos-android-france.com/listview-afficher-une-liste-delements/
  */
 public class MoteAdapter extends ArrayAdapter<Mote> {
     public MoteAdapter(Context context, List<Mote> motes) {
@@ -42,7 +43,7 @@ public class MoteAdapter extends ArrayAdapter<Mote> {
 
         //il ne reste plus qu'à remplir notre vue
         viewHolder.temperature.setText("Temperature : "+current.getTemperature()+"°C");
-        viewHolder.humidity.setText("Humidity : "+current.getTemperature()+"%");
+        viewHolder.humidity.setText("Humidity : " + current.getTemperature()+"%");
         viewHolder.sensor_name.setText(current.getName());
         viewHolder.status.setImageDrawable(new ColorDrawable(current.getLightstatus()));
         return convertView;
