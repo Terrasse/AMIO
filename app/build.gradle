@@ -26,4 +26,9 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
 
     compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+    //compile group: 'javax.mail', name: 'mail', version: '1.4'
+    //compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+    compile files('libs/additionnal.jar')
+    compile files('libs/activation.jar')
+    compile files('libs/mail.jar')
 }
