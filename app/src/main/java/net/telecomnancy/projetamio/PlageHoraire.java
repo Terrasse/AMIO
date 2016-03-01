@@ -24,34 +24,34 @@ public class PlageHoraire {
     public static String JSON_KEY_END="end";
 
     public static class CreneauHoraire{
-        protected int startHour;
-        protected int endHour;
+        protected NotificationType afternoon=NotificationType.NONE;
+        protected NotificationType night=NotificationType.NONE;
         public CreneauHoraire(){}
-        public CreneauHoraire (int start,int end){
-            this.startHour=start;
-            this.endHour=end;
+        public CreneauHoraire (NotificationType start,NotificationType end){
+            this.afternoon=start;
+            this.night=end;
         }
-        public void setStartHour(int startHour){
-            this.startHour=startHour;
+        public void setAfternoon(NotificationType afternoon){
+            this.afternoon=afternoon;
         }
-        public void setEndHour(int endHour){
-            this.endHour=endHour;
-        }
-
-        public int getStartHour() {
-            return startHour;
+        public void setNight(NotificationType night){
+            this.night=night;
         }
 
-        public int getEndHour() {
-            return endHour;
+        public NotificationType getAfternoon() {
+            return afternoon;
         }
 
-        public boolean isOnCreneau(Date d){
-            if(d!=null && d.getHours()>=startHour && d.getHours()<endHour ){
-                return true;
-            }
-            return false;
+        public NotificationType getNight() {
+            return night;
         }
+
+//        public boolean isOnCreneau(Date d){
+//            if(d!=null && d.getHours()>=startHour && d.getHours()<endHour ){
+//                return true;
+//            }
+//            return false;
+//        }
     }
     private Map<Integer, CreneauHoraire> plages;
 
@@ -59,40 +59,36 @@ public class PlageHoraire {
         plages=new HashMap<>();
     }
 
-    public void setDayHours(int day,int startHour,int endHour){
+    public void setDayHours(int day,NotificationType afternoon,NotificationType night){
         if(!(day>=1 && day <=7)){
            return ;
         }
-        plages.put(day, new CreneauHoraire(startHour, endHour));
+        plages.put(day, new CreneauHoraire(afternoon, night));
     }
     public void removeDay(int day){
         plages.remove(day);
     }
-    public void setWeekEndHours(int startHour,int endHour){
-        setDayHours(Calendar.SUNDAY, startHour, endHour);
-        setDayHours(Calendar.SATURDAY, startHour, endHour);
-    }
-    public void setWeekHours(int startHour,int endHour){
-        setDayHours(Calendar.MONDAY, startHour, endHour);
-        setDayHours(Calendar.THURSDAY, startHour, endHour);
-        setDayHours(Calendar.TUESDAY, startHour, endHour);
-        setDayHours(Calendar.WEDNESDAY, startHour, endHour);
-        setDayHours(Calendar.FRIDAY, startHour, endHour);
-    }
-    public void setAllDayHours(int startHour,int endHour){
-        setWeekEndHours(startHour, endHour);
-        setWeekHours(startHour, endHour);
-    }
+
     public Map<Integer,CreneauHoraire> getPlages(){
         return plages;
     }
-    public static boolean isOnPlage(PlageHoraire ph, Date d) {
+    public static NotificationType OnPlage(PlageHoraire ph, Date d) {
         Calendar c = new GregorianCalendar();
         c.setTime(d);
-        if (!ph.getPlages().containsKey(c.get(Calendar.DAY_OF_WEEK))) {
-            return false;
+        //verifier fin de nuit de la veille
+        int day = c.get(Calendar.DAY_OF_WEEK);
+        int yesturday = c.get(Calendar.DAY_OF_WEEK) - 1 % 7;
+        yesturday = yesturday==0 ? 7 : yesturday;
+        if(d.getHours()<6 && ph.getPlages().containsKey(yesturday) && ph.getPlages().get(yesturday).getNight()!=null &&  ph.getPlages().get(yesturday).getNight()!=NotificationType.NONE){
+            return ph.getPlages().get(yesturday).getNight();
         }
-        return ph.getPlages().get(c.get(Calendar.DAY_OF_WEEK)).isOnCreneau(d);
+        if(d.getHours()>=19 && d.getHours()<23 && ph.getPlages().containsKey(day) && ph.getPlages().get(day).getAfternoon()!=null &&  ph.getPlages().get(day).getAfternoon()!=NotificationType.NONE){
+            return ph.getPlages().get(day).getAfternoon();
+        }
+        if(d.getHours()>=23 && ph.getPlages().containsKey(day) && ph.getPlages().get(day).getNight()!=null &&  ph.getPlages().get(day).getNight()!=NotificationType.NONE){
+            return ph.getPlages().get(day).getNight();
+        }
+        return NotificationType.NONE;
     }
 
     public static String toJson(PlageHoraire ph) throws IOException {
@@ -103,8 +99,8 @@ public class PlageHoraire {
         for(Integer key : ph.getPlages().keySet()){
             jw.beginObject();
             jw.name(JSON_KEY_DAY).value(key);
-            jw.name(JSON_KEY_START).value(ph.getPlages().get(key).getStartHour());
-            jw.name(JSON_KEY_END).value(ph.getPlages().get(key).getEndHour());
+            jw.name(JSON_KEY_START).value(ph.getPlages().get(key).getAfternoon().getValue());
+            jw.name(JSON_KEY_END).value(ph.getPlages().get(key).getNight().getValue());
             jw.endObject();
         }
         jw.endArray();
@@ -120,16 +116,28 @@ public class PlageHoraire {
         jr.beginArray();
         while (jr.hasNext()) {
             jr.beginObject();
-            Integer key=null, start=null, end=null;
-            CreneauHoraire ch = new CreneauHoraire();
+            Integer key=null;
+            NotificationType start=null, end=null;
             while (jr.hasNext()) {
                 String name = jr.nextName();
                 if (name.equals(JSON_KEY_DAY)) {
                     key = jr.nextInt();
                 } else if (name.equals(JSON_KEY_START)) {
-                    start = jr.nextInt();
+                    String label = jr.nextString();
+                    for(NotificationType t : NotificationType.values()){
+                        if(label.equalsIgnoreCase(t.getValue())) {
+                            start = t;
+                            break;
+                        }
+                    }
                 } else if (name.equals(JSON_KEY_END)) {
-                    end=jr.nextInt();
+                    String label = jr.nextString();
+                    for(NotificationType t : NotificationType.values()){
+                        if(label.equalsIgnoreCase(t.getValue())) {
+                            end = t;
+                            break;
+                        }
+                    };
                 } else {
                     jr.skipValue();
                 }
@@ -148,7 +156,7 @@ public class PlageHoraire {
         StringWriter sw = new StringWriter();
         sw.write("");
         for(Integer key : plages.keySet()){
-            sw.append(""+key+" start:"+plages.get(key).getStartHour()+" end:"+plages.get(key).getEndHour()+"\n");
+            sw.append(""+key+" afternoon:"+plages.get(key).getAfternoon().getValue()+" night:"+plages.get(key).getNight().getValue()+"\n");
         }
         return sw.toString();
     }

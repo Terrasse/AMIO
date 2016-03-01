@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
     public SharedPreferences sharedPreferences;
@@ -97,19 +100,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ;
-                MainActivity.this.startActivity(new Intent(MainActivity.this ,SettingActivity.class));
+                MainActivity.this.startActivity(new Intent(MainActivity.this, SettingActivity.class));
                 return false;
             }
         });
-//        toolbar.getMenu().getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                ;
-//                MainActivity.this.startActivity(new Intent(MainActivity.this ,SettingActivity.class));
-//                return false;
-//            }
-//        });
+
 
         // répération des préferences de l'application
         sharedPreferences = getSharedPreferences(SettingActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);

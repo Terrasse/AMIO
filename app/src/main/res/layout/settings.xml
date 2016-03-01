@@ -6,13 +6,14 @@
     android:rowCount="20"
     android:layout_rowWeight="60"
     android:orientation="vertical"
-    android:alignmentMode="alignBounds">
+    android:alignmentMode="alignBounds"
+    android:nestedScrollingEnabled="true">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Select time slot for notification"
+        android:text="Select time slot"
         android:id="@+id/titre"
         android:layout_gravity="center_horizontal"
         android:layout_row="0"
@@ -22,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Begining"
+        android:text="Afternoon"
         android:id="@+id/textViewstart"
         android:layout_gravity="center_horizontal"
         android:layout_row="1"
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="End"
+        android:text="night"
         android:id="@+id/textViewend"
         android:layout_gravity="center_horizontal"
         android:layout_row="1"
@@ -44,22 +45,20 @@
         android:id="@+id/checkBox1"
         android:layout_row="2"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker1"
-        android:layout_gravity="center_horizontal"
         android:layout_row="2"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker1"
-        android:layout_gravity="center_horizontal"
         android:layout_row="2"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -68,22 +67,20 @@
         android:id="@+id/checkBox2"
         android:layout_row="3"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker2"
-        android:layout_gravity="center_vertical"
         android:layout_row="3"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker2"
-        android:layout_gravity="center_horizontal"
         android:layout_row="3"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -92,22 +89,20 @@
         android:id="@+id/checkBox3"
         android:layout_row="4"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker3"
-        android:layout_gravity="center_vertical"
         android:layout_row="4"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker3"
-        android:layout_gravity="center_horizontal"
         android:layout_row="4"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -116,22 +111,20 @@
         android:id="@+id/checkBox4"
         android:layout_row="5"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker4"
-        android:layout_gravity="center_vertical"
         android:layout_row="5"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker4"
-        android:layout_gravity="center_horizontal"
         android:layout_row="5"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -140,22 +133,20 @@
         android:id="@+id/checkBox5"
         android:layout_row="6"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker5"
-        android:layout_gravity="center_vertical"
         android:layout_row="6"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker5"
-        android:layout_gravity="center_horizontal"
         android:layout_row="6"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -164,22 +155,20 @@
         android:id="@+id/checkBox6"
         android:layout_row="7"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker6"
-        android:layout_gravity="center_vertical"
         android:layout_row="7"
-        android:layout_column="1" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/endPicker6"
-        android:layout_gravity="center_horizontal"
         android:layout_row="7"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -188,21 +177,45 @@
         android:id="@+id/checkBox7"
         android:layout_row="8"
         android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
         android:id="@+id/startpicker7"
-        android:layout_gravity="center_vertical"
         android:layout_row="8"
-        android:layout_column="1" />
+        android:layout_column="1"
+        android:entries="@array/spinnerItems" />
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:id="@+id/endPicker7"
+        android:layout_row="8"
+        android:layout_column="2"
+        android:entries="@array/spinnerItems" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/textView2"
+        android:layout_row="11"
+        android:layout_column="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Light detection level"
+        android:id="@+id/textView6"
+        android:layout_row="12"
+        android:layout_column="0" />
 
     <NumberPicker
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:id="@+id/endPicker7"
-        android:layout_gravity="center_horizontal"
-        android:layout_row="8"
+        android:id="@+id/lightpicker"
+        android:layout_gravity="center_vertical"
+        android:layout_row="12"
         android:layout_column="2" />
 
     <TextView
@@ -210,8 +223,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
-        android:id="@+id/textView3"
-        android:layout_row="11"
+        android:id="@+id/textView4"
+        android:layout_row="14"
         android:layout_column="0" />
 
     <TextView
@@ -220,7 +233,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Mail to notify"
         android:id="@+id/textView"
-        android:layout_row="12"
+        android:layout_row="15"
         android:layout_column="0" />
 
     <EditText
@@ -230,42 +243,16 @@
         android:ems="12"
         android:textSize="12dp"
         android:id="@+id/mail"
-        android:layout_row="13"
-        android:layout_column="0" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
-        android:id="@+id/textView2"
-        android:layout_row="14"
-        android:layout_column="0" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Active light detection level"
-        android:id="@+id/textView6"
-        android:layout_row="15"
-        android:layout_column="0" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:id="@+id/lightpicker"
-        android:layout_gravity="center_vertical"
-        android:layout_row="15"
-        android:layout_column="1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
-        android:id="@+id/textView4"
         android:layout_row="16"
+        android:layout_column="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/textView5"
+        android:layout_row="17"
         android:layout_column="0" />
 
     <CheckBox
@@ -274,7 +261,7 @@
         android:text="Start at boot"
         android:id="@+id/checkBoxStart"
         android:layout_marginBottom="46dp"
-        android:layout_row="17"
+        android:layout_row="18"
         android:layout_column="0"/>
 
     <Button
@@ -282,7 +269,7 @@
         android:layout_height="wrap_content"
         android:text="ok"
         android:id="@+id/save"
-        android:layout_row="17"
+        android:layout_row="18"
         android:layout_column="2" />
 
 </GridLayout>
