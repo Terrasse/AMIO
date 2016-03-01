@@ -25,9 +25,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import java.io.IOException;
+import java.util.List;
 
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     // sharedPreferencies
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     // My Service
-    private PollingService mPollingService;
     private Intent mPoolingServiceIntend;
     private boolean mPollingService_isBound;
 
@@ -44,19 +43,30 @@ public class MainActivity extends AppCompatActivity {
     public ToggleButton b_onOff;
     ListView mListView;
 
+    // My objects
+    List<Mote> motes;
 
     // Messengers
     Messenger mServiceMessenger = null;
-    Messenger mMessenger = new Messenger(new MainIncomingHandler());
+    Messenger mMessenger = new Messenger(new IncomingHandler());
 
 
     // handler qui va reçevoir les notifications du service
-    class MainIncomingHandler extends Handler {
+    private class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            Log.d("MainIncomingHandler","Reception d'un message");
+
             switch (msg.what) {
-                case PollingService.MSG_SET_TV4:
+                case PollingService.MSG_UPDATE:
+                    Log.d("MainActivity", "update view");
+                    String str1 = msg.getData().getString("str1");
+                    MoteAdapter adapter = null;
+                    try {
+                        adapter = new MoteAdapter(MainActivity.this, MotesUtils.fromJson(str1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mListView.setAdapter(adapter);
                     break;
                 case PollingService.MSG_CALLBACK_CLIENT:
                     Log.d("MainIncomingHandler","Callback reçu");
@@ -139,16 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
         // listView
         mListView = (ListView) findViewById(R.id.listView);
-        String[] prenoms = new String[]{
-                "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
-                "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
-                "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
-                "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
-                "Yann", "Zoé"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                android.R.layout.simple_list_item_1, prenoms);
-        mListView.setAdapter(adapter);
     }
 
     @Override

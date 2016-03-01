@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,12 +34,15 @@ public class PollingService extends Service {
     static final int MSG_SET_TV4 = 1;
     static final int MSG_UNREGISTER_CLIENT = 2;
     static final int MSG_REGISTER_CLIENT = 3;
-    static final int MSG_SET_STRING_VALUE = 4;
+    static final int MSG_UPDATE = 4;
     static final int MSG_CALLBACK_CLIENT = 5;
 
     // Task
     TimerTask pollingTask;
     Timer timer;
+
+    // Objects
+    History history;
 
     // Messagers
     private ArrayList<Messenger> clients = new ArrayList<Messenger>();
@@ -65,26 +70,26 @@ public class PollingService extends Service {
     }
 
     // asyncTask
-    private class DownloadWebpageTask extends AsyncTask<String, Void, List<IotlabData>> {
-        private int status;
-        private String data;
+    private class DownloadWebpageTask extends AsyncTask<String, Void, List<String>> {
+        private List status;
         private long id;
 
         public DownloadWebpageTask() {
             super();
-            this.status = 0;
-            this.data = "";
+            this.status = new ArrayList();
             this.id = System.currentTimeMillis();
         }
 
         @Override
-        protected List<IotlabData> doInBackground(String... urls) {
+        protected List<String> doInBackground(String... urls) {
             // params comes from the execute() call: params[0] is the url.
             try {
-                Log.i("DonwloadWebpageTask", "GET(id=" + id + ") url : " + urls[0]);
-                this.data = downloadUrl(urls[0]);
-                // return IotlabParser.getIotlabDatas();
-                return new ArrayList<IotlabData>();
+                List<String> data = new ArrayList<String>();
+                for(String currentString: urls){
+                    Log.i("DonwloadWebpageTask", "GET(id=" + id + ") url : " + currentString);
+                    data.add(downloadUrl(currentString));
+                }
+                return data;
             } catch (IOException e) {
                 Log.d("DonwloadWebpageTask", "GET(id=" + id + ") failed");
                 return null;
@@ -92,18 +97,26 @@ public class PollingService extends Service {
         }
 
         @Override
-        protected void onPostExecute(List<IotlabData> iotlabDatas) {
-            super.onPostExecute(iotlabDatas);
-            Log.i("DonwloadWebpageTask", "GET(id=" + id + ") status : " + status);
+        protected void onPostExecute(List<String> data) {
+            super.onPostExecute(data);
+
             // traitement du résultat de téléchargement de la page web
-            if (this.status != 200 || iotlabDatas == null) {
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.API_failed), duration);
-                toast.show();
-            } else {
-                Log.i("DonwloadWebpageTask", "GET(id=" + id + ") data : " + this.data);
-                notifyAllClient(iotlabDatas);
+            for (int i=0; i<data.size(); i++){
+                Log.i("DonwloadWebpageTask", "GET(id=" + id + ") status : " + status.get(i));
+                try {
+                if ((int)(status.get(i)) != 200) {
+                    throw new FailedConnectionException("");
+                } else {
+                    Log.i("DonwloadWebpageTask", "GET(id=" + id + ") data : " + data.get(i));
+                    history.addJSONIotlabDatas(data.get(i));
+                }
+                } catch(FailedConnectionException | IOException e){
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.API_failed), duration);
+                    toast.show();
+                }
             }
+            notifyAllClient();
         }
 
         private String downloadUrl(String myurl) throws IOException {
@@ -121,7 +134,7 @@ public class PollingService extends Service {
                 conn.setDoInput(true);
                 // Starts the query
                 conn.connect();
-                status = conn.getResponseCode();
+                status.add(conn.getResponseCode());
                 is = conn.getInputStream();
 
                 // Convert the InputStream into a string
@@ -163,10 +176,19 @@ public class PollingService extends Service {
         // stopped, so return sticky.
         Log.d("PollingService", "Démarrage du PollingService");
 
+        // History
+        this.history=new History();
+
         // récupération ded informations polling
         Resources res = getResources();
         int polling_period = res.getInteger(R.integer.PollingService_period); // intervalle de polling
-        final String url= res.getString(R.string.API_url); // url de polling
+
+        // récupération des urls de pollng
+        final List<String> urls= new ArrayList<String>();
+        urls.add(res.getString(R.string.API_url_humidity));
+        urls.add(res.getString(R.string.API_url_light1));
+        urls.add(res.getString(R.string.API_url_temperature));
+
 
 
         // Creation d'une tâche asynchrone réccurente
@@ -175,7 +197,7 @@ public class PollingService extends Service {
         this.pollingTask = new TimerTask(){
             @Override
             public void run() {
-                new DownloadWebpageTask().execute(url);
+                new DownloadWebpageTask().execute(urls.get(0),urls.get(1),urls.get(2));
             }
         };
 
@@ -232,10 +254,30 @@ public class PollingService extends Service {
             this.mNM.notify(mNotificationId, mBuilder.build());
         }*/
 
-    public void notifyAllClient(List<IotlabData> list){
+    public void notifyAllClient(){
+        // TODO : refactoring -> permet de récupérer de passer d'un IotlabData à un liste de motes
+        List<Mote> motes=new ArrayList<Mote>();
+        for(String currentKey:history.getHistory().keySet()) {
+            motes.add(new Mote(history,currentKey));
+        }
+
+        // transformation en json
+        String stringMotes="";
+        try {
+            stringMotes=MotesUtils.toJSON(motes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // send des motes aux clients
         for (int i = 0; i < clients.size(); i++) {
             try {
-                clients.get(i).send(Message.obtain(null, MSG_SET_TV4));
+                //Send data as a String
+                Bundle b = new Bundle();
+                b.putString("str1",stringMotes);
+                Message msg = Message.obtain(null, MSG_UPDATE);
+                msg.setData(b);
+                clients.get(i).send(msg);
             } catch (RemoteException e) {
                 // If we get here, the client is dead, and we should remove it from the list
                 Log.d("PollingService","Client removed : " + clients.get(i));

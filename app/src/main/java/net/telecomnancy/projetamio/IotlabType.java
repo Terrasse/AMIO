@@ -7,7 +7,7 @@ public enum IotlabType {
     TEMPERATURE("temperature"),
     LIGHT1("light1"),
     LIGHT2("light2"),
-    LIGHT("humitdity");
+    HUMIDITY("humidity");
 
     protected String value;
     private IotlabType(String value){

@@ -24,6 +24,7 @@ public class IotlabData {
 
     public void setDate(long timestamp) { this.date = new Date(timestamp); }
     public void setDate(Date date) { this.date = date; }
+    public Long getDateInTimestamp() { return this.date.getTime();}
 
     public IotlabType getType() {
         return type;
