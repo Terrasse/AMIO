@@ -1,5 +1,8 @@
 package net.telecomnancy.projetamio;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +14,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -87,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                                 case NOTIFICATION:
                                     //TODO
                                     Log.i(MainActivity.class.getName(), "send Notification");
+                                    sendNotification(m);
                                     break;
                                 case EMAIL:
                                     Log.i(MainActivity.class.getName(), "send email");
@@ -146,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         // répération des préferences de l'application
         sharedPreferences = getSharedPreferences(SettingActivity.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        LIGHT_ON_OFF_STEP = getPreferedLightLevel();
 
         // récupération des différents objets graphiques concernant le PollingService
         b_onOff = (ToggleButton) findViewById(R.id.toggleButtonOnOff);
@@ -177,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
         // listView
         mListView = (ListView) findViewById(R.id.listView);
+
     }
 
     @Override
@@ -255,8 +263,39 @@ public class MainActivity extends AppCompatActivity {
     public String getPreferedMail(){
         return sharedPreferences.getString(SettingActivity.MAIL_KEY, "");
     }
-    public String getPreferedLightLevel(){
-        return sharedPreferences.getString(SettingActivity.LIGHT_LEVEL_KEY, "");
+    public int getPreferedLightLevel(){
+        return sharedPreferences.getInt(SettingActivity.LIGHT_LEVEL_KEY, 250);
+    }
+    public void sendNotification(Mote m){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_polling)
+                        .setContentTitle("Alert_AMIO")
+                        .setContentText("Sensor :"+m.getName()+"\n Light ON");
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+    // The stack builder object will contain an artificial back stack for the
+    // started Activity.
+    // This ensures that navigating backward from the Activity leads out of
+    // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(10, mBuilder.build());
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
     }
 
 }

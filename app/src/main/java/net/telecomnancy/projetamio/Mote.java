@@ -54,7 +54,7 @@ public class Mote {
         this.light=String.valueOf(history.getMoteHistory(id,IotlabType.LIGHT1).get(0).getValue());
         try {
             this.lastLightActive = history.getMoteHistory(id, IotlabType.LIGHT1).get(1).getValue() > MainActivity.LIGHT_ON_OFF_STEP;
-        }catch(Exception e){
+        }catch(Exception e) {
             this.lastLightActive = true;
         }
         this.name=id;

@@ -32,6 +32,6 @@ public class MailService extends AsyncTask<String, Void, Void> {
         return null;
     }
     private String getBody(String id){
-        return id ;
+        return "Sensor :"+id+"\n Light ON" ;
     }
 }
