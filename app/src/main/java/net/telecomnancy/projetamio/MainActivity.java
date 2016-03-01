@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -64,20 +65,31 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MainActivity", "update view");
                     String str1 = msg.getData().getString("str1");
                     MoteAdapter adapter = null;
+                    Log.i(MainActivity.class.getName(), "1");
                     try {
                         adapter = new MoteAdapter(MainActivity.this, MotesUtils.fromJson(str1));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    Log.i(MainActivity.class.getName(), "2");
                     mListView.setAdapter(adapter);
+                    Log.i(MainActivity.class.getName(), "3");
                     for(Mote m : adapter.getItems()){
+                        Log.i(MainActivity.class.getName(), "4");
+                        Log.i(MainActivity.class.getName(), "On:"+m.isOn()+", lastOn:"+m.getLastLightActive());
                         if(m.becomeActive()){
+                            Log.i(MainActivity.class.getName(), "5");
                             PlageHoraire ph = getPreferedPlageHoraire();
-                            switch (PlageHoraire.OnPlage(ph,m.getDate())){
+
+                            Date date = m.getDate();
+                            date.setHours(23);
+                            switch (PlageHoraire.OnPlage(ph, date)){
                                 case NOTIFICATION:
                                     //TODO
+                                    Log.i(MainActivity.class.getName(), "send Notification");
                                     break;
                                 case EMAIL:
+                                    Log.i(MainActivity.class.getName(), "send email");
                                     new MailService().execute(getPreferedMail(),m.getName());
                                     break;
                             }

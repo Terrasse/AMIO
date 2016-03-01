@@ -20,6 +20,8 @@ public class MotesUtils {
     public final static String JSON_KEY_NAME="name";
     public final static String JSON_KEY_TIMESTAMP="timestamp";
     public final static String JSON_KEY_LASTALERT="lastalert";
+    public final static String JSON_KEY_LASTSTATE="laststate";
+
 
 
     public final static String toJSON(List<Mote> motes) throws IOException {
@@ -35,6 +37,7 @@ public class MotesUtils {
             jw.name(JSON_KEY_NAME).value(current.getName());
             jw.name(JSON_KEY_TIMESTAMP).value(current.getLastupdate());
             jw.name(JSON_KEY_LASTALERT).value(current.getLastalert());
+            jw.name(JSON_KEY_LASTSTATE).value(Boolean.toString(current.getLastLightActive()));
             jw.endObject();
         }
         jw.endArray();
@@ -64,6 +67,8 @@ public class MotesUtils {
                     mote.setLastupdate(jr.nextString());
                 } else if (name.equals(JSON_KEY_LASTALERT)) {
                     mote.setLastalert(jr.nextString());
+                } else if (name.equals(JSON_KEY_LASTSTATE)) {
+                    mote.setLastLightActive(Boolean.valueOf(jr.nextString()));
                 } else {
                         jr.skipValue();
                 }

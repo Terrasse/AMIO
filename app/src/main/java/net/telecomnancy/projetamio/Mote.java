@@ -13,7 +13,7 @@ public class Mote {
     private String temperature;
     private String humidity;
     private String light;
-    private Boolean lastLightActive=null;
+    private boolean lastLightActive=true;
     private String lastalert;
 
     public String getLastalert() {
@@ -38,7 +38,7 @@ public class Mote {
 
     }
 
-    public Mote(String name, String temperature, String humidity, String lightstatus, String lastupdate, String lastalert,Boolean lastLightActive) {
+    public Mote(String name, String temperature, String humidity, String lightstatus, String lastupdate, String lastalert,boolean lastLightActive) {
         this.name = name;
         this.temperature = temperature;
         this.humidity = humidity;
@@ -52,6 +52,11 @@ public class Mote {
         this.temperature=String.valueOf(history.getMoteHistory(id,IotlabType.TEMPERATURE).get(0).getValue());
         this.humidity=String.valueOf(history.getMoteHistory(id, IotlabType.HUMIDITY).get(0).getValue());
         this.light=String.valueOf(history.getMoteHistory(id,IotlabType.LIGHT1).get(0).getValue());
+        try {
+            this.lastLightActive = history.getMoteHistory(id, IotlabType.LIGHT1).get(1).getValue() > MainActivity.LIGHT_ON_OFF_STEP;
+        }catch(Exception e){
+            this.lastLightActive = true;
+        }
         this.name=id;
         this.lastupdate=String.valueOf(history.getMoteHistory(id).get(0).getDateInTimestamp());
         this.lastalert=String.valueOf(history.getLastalert(id));
@@ -89,11 +94,11 @@ public class Mote {
         this.light = light;
     }
 
-    public Boolean getLastLightActive() {
+    public boolean getLastLightActive() {
         return lastLightActive;
     }
 
-    public void setLastLightActive(Boolean lastLightActive) {
+    public void setLastLightActive(boolean lastLightActive) {
         this.lastLightActive = lastLightActive;
     }
 
@@ -120,9 +125,6 @@ public class Mote {
 
 
     public boolean becomeActive(){
-        if(lastLightActive==null){
-            return false;
-        }
         if(!lastLightActive && isOn()){
             return true;
         }

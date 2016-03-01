@@ -19,11 +19,13 @@ public class MailService extends AsyncTask<String, Void, Void> {
             Log.e(MailService.class.getName(), "Bad MailService Parameter");
         }
         try {
+            Log.d(MailService.class.getName(), "try to send mail");
             GmailSender sender = new GmailSender("amio.app3@gmail.com", "schwartz.dervaux");
             sender.sendMail("AMIO_ALERT",
                     getBody(urls[1]),
                     "amio.app3@gmail.com",
                     urls[0]);
+            Log.e(MailService.class.getName(), "Send mail to"+urls[0]);
         } catch (Exception e) {
             Log.e(MailService.class.getName(), e.getMessage(), e);
         }
