@@ -70,27 +70,17 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MainActivity", "update view");
                     String str1 = msg.getData().getString("str1");
                     MoteAdapter adapter = null;
-                    Log.i(MainActivity.class.getName(), "1");
                     try {
                         adapter = new MoteAdapter(MainActivity.this, MotesUtils.fromJson(str1));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.i(MainActivity.class.getName(), "2");
                     mListView.setAdapter(adapter);
-                    Log.i(MainActivity.class.getName(), "3");
                     for(Mote m : adapter.getItems()){
-                        Log.i(MainActivity.class.getName(), "4");
-                        Log.i(MainActivity.class.getName(), "On:"+m.isOn()+", lastOn:"+m.getLastLightActive());
                         if(m.becomeActive()){
-                            Log.i(MainActivity.class.getName(), "5");
                             PlageHoraire ph = getPreferedPlageHoraire();
-
-                            Date date = m.getDate();
-                            date.setHours(23);
-                            switch (PlageHoraire.OnPlage(ph, date)){
+                            switch (PlageHoraire.OnPlage(ph, m.getDate())){
                                 case NOTIFICATION:
-                                    //TODO
                                     Log.i(MainActivity.class.getName(), "send Notification");
                                     sendNotification(m);
                                     break;
